@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ t.public_title }} – {{ client.name }}{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="grid" style="grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+      <div>
+        <h1 style="margin: 0 0 4px 0;">{{ client.name }}</h1>
+        <p class="muted" style="margin: 0;">{{ t.public_intro }}</p>
+      </div>
+      <form method="get" style="display: flex; gap: 8px; align-items: center;">
+        <select name="lang" aria-label="Language">
+          {% for code, label in languages %}
+            <option value="{{ code }}" {% if code == lang %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn secondary" type="submit">OK</button>
+      </form>
+    </div>
+    <form method="post" class="grid">
+      {% csrf_token %}
+      {{ form.website }}
+      <input type="hidden" name="lang" value="{{ lang }}" />
+      <div>
+        <strong>{{ t.rating_label }}</strong><br />
+        <div style="margin-top: 8px;">
+          <div class="rating" role="radiogroup" aria-label="{{ t.rating_label }}">
+            {% for radio in form.rating %}
+              {{ radio.tag }}
+              <label for="{{ radio.id_for_label }}" title="{{ radio.choice_label }}">
+                <span class="sr-only">{{ radio.choice_label }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% for err in form.rating.errors %}
+          <div class="msg error" style="margin: 10px 0 0 0;">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        <strong>{{ t.comment_label }}</strong><br />
+        {{ form.comment }}
+        {% for err in form.comment.errors %}
+          <div class="msg error" style="margin: 10px 0 0 0;">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button class="btn accent" type="submit">{{ t.submit }}</button>
+    </form>
+  </div>
+{% endblock %}

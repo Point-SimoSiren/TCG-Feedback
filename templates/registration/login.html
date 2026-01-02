@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Kirjaudu{% endblock %}
+{% block content %}
+  <div class="card">
+    <h1>Kirjaudu</h1>
+    {% if form.errors %}
+      <div class="msg error">Tarkista käyttäjätunnus ja salasana.</div>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="grid">
+        <label>
+          Käyttäjätunnus
+          {{ form.username }}
+        </label>
+        <label>
+          Salasana
+          {{ form.password }}
+        </label>
+        <button class="btn" type="submit">Kirjaudu</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+

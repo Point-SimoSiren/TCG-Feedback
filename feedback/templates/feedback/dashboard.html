@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load feedback_extras %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <div class="card">
+    <h1>Dashboard</h1>
+    {% if client %}
+      <p class="muted">{{ client.name }} (token: <code>{{ client.public_token }}</code>)</p>
+      <p class="muted">Julkinen linkki: <a href="{{ client.get_public_url }}">{{ client.get_public_url }}</a></p>
+    {% endif %}
+    {% if stats %}
+      <p class="muted">
+        Palautteita: <strong>{{ stats.count }}</strong>
+        {% if stats.avg_rating %} • Keskiarvo: <strong>{{ stats.avg_rating|floatformat:1 }}</strong>{% endif %}
+      </p>
+    {% endif %}
+  </div>
+
+  {% if page %}
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Aika</th>
+            {% if user.is_superuser %}<th>Asiakas</th>{% endif %}
+            <th>Arvosana</th>
+            <th>Kommentti</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for row in page.object_list %}
+            <tr>
+              <td>{{ row.created_at|date:"Y-m-d H:i" }}</td>
+              {% if user.is_superuser %}<td>{{ row.client.name }}</td>{% endif %}
+              <td>{{ row.rating|stars|safe }}</td>
+              <td>{{ row.comment|default:"" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="muted">Ei palautteita.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="pagination" style="margin-top: 12px;">
+        {% if page.has_previous %}
+          <a class="btn secondary" href="?page={{ page.previous_page_number }}">Edellinen</a>
+        {% endif %}
+        <span class="muted">Sivu {{ page.number }} / {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}
+          <a class="btn secondary" href="?page={{ page.next_page_number }}">Seuraava</a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

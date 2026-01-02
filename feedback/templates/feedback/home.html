@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Palaute{% endblock %}
+{% block content %}
+  <div class="card">
+    <h1>Palautejärjestelmä</h1>
+    <p class="muted">Asiakkaat voivat jättää palautetta token-linkin kautta. Yrityksen käyttäjät kirjautuvat sisään ja näkevät oman yrityksen palautteet.</p>
+    <p>
+      <a class="btn" href="{% url 'login' %}">Kirjaudu sisään</a>
+      <a class="btn secondary" href="/admin/">Admin</a>
+    </p>
+  </div>
+{% endblock %}
+
